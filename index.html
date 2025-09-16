@@ -1,12 +1,190 @@
 <!DOCTYPE html> 
 <html lang="en">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Al Fizaa Girls Hostel Management System - Secure student accommodation management platform with comprehensive features for admissions, fees, and administrative tasks." />
+<meta name="keywords" content="hostel management, student accommodation, girls hostel, Al Fizaa, hostel administration, student management system" />
+
+<link rel="manifest" href="manifest.json">
+<!-- Theme color for browsers that support it -->
+<meta name="theme-color" content="#6200ee">
+<meta name="msapplication-TileColor" content="#6200ee">
+<meta name="apple-mobile-web-app-status-bar-style" content="#6200ee">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Accessibility Enhancements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus indicators for better keyboard navigation */
+*:focus {
+  outline: 2px solid #667eea !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .login-container {
+    background: #ffffff !important;
+    border: 3px solid #000000 !important;
+  }
+  
+  .login-btn {
+    border: 2px solid #000000 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+#admin-notifications-btn {
+  padding:6px 12px;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:6px;
+  cursor:pointer;
+  margin-right:10px;
+  font-size:0.85rem;
+  display:none;
+  position:relative;
+}
+#notification-badge {
+  position:absolute;
+  top:-8px;
+  right:-8px;
+  background:#ff4444;
+  color:white;
+  border-radius:50%;
+  min-width:20px;
+  height:20px;
+  display:none;
+  font-size:0.7rem;
+  font-weight:bold;
+  line-height:20px;
+  text-align:center;
+}
+
+/* Mobile scrolling fix */
+@media (max-width: 768px) {
   html {
     height: 100%;
     overflow-x: hidden;
   }
   
   body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    position: static;
+  }
+  
+  /* Fix for all containers */
+  .container, .main-content, [class*="container"], [class*="content"] {
+    overflow-y: auto;
+  }
+  
+  /* Remove problematic transforms and filters */
+  * {
+    -webkit-transform: none !important;
+    transform: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    will-change: auto !important;
+  }
+  
+  /* Add smooth scrolling for all containers */
+  .main-content, 
+  [id*="template"], 
+  .content-area,
+  .table-container,
+  .students-content,
+  .admin-content, 
+  .guest-content,
+  .login-container,
+  #login-page {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scroll-behavior: smooth !important;
+    height: auto !important;
+    max-height: calc(100vh - 80px) !important;
+  }
+  
+  /* Specific template container fixes */
+  [id*="template"] {
+    padding: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure proper content flow */
+  .content-area {
+    padding: 8px !important;
+    margin: 0 !important;
+    position: relative !important;
+  }
+  
+  /* Prevent zoom and improve inputs */
+  input, select, textarea, button {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+  
+  /* Disable animations that can cause scroll issues */
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+</style>
+<title>Al Fizaa Girls Hostel - Management Software</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<!-- External authentication removed: using local lightweight auth (localStorage) -->
+<script>
+  // Placeholder so script ordering remains consistent after removing external SDKs
+  window.externalAuthRemoved = true;
+</script>
+<script>
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+const CACHE_NAME = 'al-fizaa-hostel-v1';
+const urlsToCache = ['/index1.html', '/manifest.json'];
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
+});
+self.addEventListener('fetch', event => {
+  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+});
+self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') event.waitUntil(syncData());
 });
 async function syncData() {
@@ -28,8 +206,232 @@ class DataManager {
     this.isOnline = navigator.onLine;
     this.init();
   }
-  <!-- Firebase code removed -->
+  
+  init() {
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+      this.showStatus('Online - Syncing...', 'online');
+      this.syncPendingData();
+    });
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+      this.showStatus('Offline Mode', 'offline');
+    });
+  }
+  
+  async saveData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+    if (!this.isOnline) {
+      const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
+      pending.push({key, data, timestamp: Date.now()});
+      localStorage.setItem('pendingSync', JSON.stringify(pending));
+    }
+  }
+  
+  getData(key) {
+    return JSON.parse(localStorage.getItem(key) || '[]');
+  }
+  
+  async syncPendingData() {
+    const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
+    if (pending.length > 0) {
+      localStorage.removeItem('pendingSync');
+      this.showStatus('Data synced', 'success');
+    }
+  }
+  
+  showStatus(message, type) {
+    let statusEl = document.getElementById('sync-status');
+    if (!statusEl) {
+      statusEl = document.createElement('div');
+      statusEl.id = 'sync-status';
+      statusEl.style.cssText = 'position:fixed;top:20px;right:20px;padding:8px 12px;border-radius:5px;color:white;font-size:12px;z-index:10000;';
+      document.body.appendChild(statusEl);
+    }
+    statusEl.textContent = message;
+    statusEl.style.background = type === 'online' ? '#28a745' : type === 'offline' ? '#dc3545' : '#ffc107';
+    statusEl.style.display = 'block';
+    setTimeout(() => statusEl.style.display = 'none', 3000);
+  }
+}
 
+// Initialize
+window.dataManager = new DataManager();
+
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const installBtn = document.createElement('button');
+  installBtn.textContent = 'Install App';
+  installBtn.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#4D388A;color:white;border:none;border-radius:5px;cursor:pointer;z-index:1000;';
+  installBtn.onclick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.remove();
+    }
+  };
+  document.body.appendChild(installBtn);
+});
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+:root{
+--primary:#4D388A;--secondary:#6D57A8;--accent:#28A745;--bg:#F4F6F9;
+--card:#FFFFFF;--text:#333;--border:#E0E0E0;--red:#DC3545;--green:#28A745;
+--blue:#17A2B8;--yellow:#FFC107;
+--gradient-1:#4a5cc9;--gradient-2:#5d3987;--gradient-3:#d575e0;--gradient-4:#d43851;
+--gradient-5:#3989e3;--gradient-6:#00d1e3;--gradient-7:#e44f4f;--gradient-8:#3ca89c;
+--gradient-9:#2d96b8;--gradient-10:#7bb599;--gradient-11:#e5b03c;--gradient-12:#e57fd8;
+}
+
+/* Animations disabled on mobile for better performance */
+@media (min-width: 769px) {
+  @keyframes gradientShift {
+      0% { background-position: 0% 50% }
+      50% { background-position: 100% 50% }
+      100% { background-position: 0% 50% }
+  }
+  @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg) }
+      33% { transform: translateY(-20px) rotate(5deg) }
+      66% { transform: translateY(-10px) rotate(-3deg) }
+  }
+  @keyframes pulse {
+      0%, 100% { transform: scale(1) }
+      50% { transform: scale(1.05) }
+  }
+  @keyframes shimmer {
+      0% { background-position: -200% center }
+      100% { background-position: 200% center }
+  }
+}
+.vibrant-input {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.2);
+    transition: none;
+}
+.vibrant-input:focus {
+    border: 1px solid rgba(0,0,0,0.4);
+    box-shadow: none;
+    transform: none;
+}
+.gradient-text {
+    background: none;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    background-clip: initial;
+    background-size: initial;
+    animation: none;
+    color: #333;
+}
+
+/* Theme Variants */
+.theme-purple{--primary:#4D388A;--secondary:#6D57A8;--accent:#28A745;
+--gradient-1:#4a5cc9;--gradient-2:#5d3987;--gradient-3:#d575e0;--gradient-4:#d43851;
+--gradient-5:#3989e3;--gradient-6:#00d1e3;--gradient-7:#e44f4f;--gradient-8:#3ca89c;
+--gradient-9:#2d96b8;--gradient-10:#7bb599;--gradient-11:#e5b03c;--gradient-12:#e57fd8;}
+
+.theme-ocean{--primary:#0077be;--secondary:#00a8cc;--accent:#00d4aa;
+--gradient-1:#0077be;--gradient-2:#00a8cc;--gradient-3:#00d4aa;--gradient-4:#7dd3fc;
+--gradient-5:#38bdf8;--gradient-6:#0ea5e9;--gradient-7:#0284c7;--gradient-8:#0369a1;
+--gradient-9:#075985;--gradient-10:#0c4a6e;--gradient-11:#164e63;--gradient-12:#155e75;}
+
+.theme-sunset{--primary:#ff6b35;--secondary:#f7931e;--accent:#ffb347;
+--gradient-1:#ff6b35;--gradient-2:#f7931e;--gradient-3:#ffb347;--gradient-4:#ffd700;
+--gradient-5:#ff8c00;--gradient-6:#ff4500;--gradient-7:#dc143c;--gradient-8:#b22222;
+--gradient-9:#8b0000;--gradient-10:#a0522d;--gradient-11:#d2691e;--gradient-12:#cd853f;}
+
+.theme-forest{--primary:#228b22;--secondary:#32cd32;--accent:#90ee90;
+--gradient-1:#228b22;--gradient-2:#32cd32;--gradient-3:#90ee90;--gradient-4:#98fb98;
+--gradient-5:#00ff7f;--gradient-6:#00fa9a;--gradient-7:#20b2aa;--gradient-8:#008b8b;
+--gradient-9:#2e8b57;--gradient-10:#3cb371;--gradient-11:#66cdaa;--gradient-12:#7fffd4;}
+
+.theme-royal{--primary:#4b0082;--secondary:#8a2be2;--accent:#9370db;
+--gradient-1:#4b0082;--gradient-2:#8a2be2;--gradient-3:#9370db;--gradient-4:#ba55d3;
+--gradient-5:#da70d6;--gradient-6:#ee82ee;--gradient-7:#dda0dd;--gradient-8:#d8bfd8;
+--gradient-9:#e6e6fa;--gradient-10:#f0e68c;--gradient-11:#ffd700;--gradient-12:#ffb347;}
+
+.theme-cherry{--primary:#dc143c;--secondary:#ff1493;--accent:#ff69b4;
+--gradient-1:#dc143c;--gradient-2:#ff1493;--gradient-3:#ff69b4;--gradient-4:#ff6347;
+--gradient-5:#ff4500;--gradient-6:#ffa500;--gradient-7:#ffd700;--gradient-8:#ffff00;
+--gradient-9:#adff2f;--gradient-10:#7fff00;--gradient-11:#32cd32;--gradient-12:#00ff00;}
+
+.theme-midnight{--primary:#191970;--secondary:#483d8b;--accent:#6a5acd;
+--gradient-1:#191970;--gradient-2:#483d8b;--gradient-3:#6a5acd;--gradient-4:#7b68ee;
+--gradient-5:#9370db;--gradient-6:#8a2be2;--gradient-7:#9932cc;--gradient-8:#ba55d3;
+--gradient-9:#da70d6;--gradient-10:#ee82ee;--gradient-11:#dda0dd;--gradient-12:#d8bfd8;}
+
+.theme-tropical{--primary:#ff7f50;--secondary:#ff6347;--accent:#ffa500;
+--gradient-1:#ff7f50;--gradient-2:#ff6347;--gradient-3:#ffa500;--gradient-4:#ffd700;
+--gradient-5:#ffff00;--gradient-6:#adff2f;--gradient-7:#7fff00;--gradient-8:#32cd32;
+--gradient-9:#00ff7f;--gradient-10:#00fa9a;--gradient-11:#20b2aa;--gradient-12:#008b8b;}
+
+.theme-aurora{--primary:#00ced1;--secondary:#48d1cc;--accent:#7fffd4;
+--gradient-1:#00ced1;--gradient-2:#48d1cc;--gradient-3:#7fffd4;--gradient-4:#afeeee;
+--gradient-5:#e0ffff;--gradient-6:#f0f8ff;--gradient-7:#e6e6fa;--gradient-8:#d8bfd8;
+--gradient-9:#dda0dd;--gradient-10:#ee82ee;--gradient-11:#da70d6;--gradient-12:#ba55d3;}
+
+.theme-cosmic{--primary:#8b008b;--secondary:#9932cc;--accent:#ba55d3;
+--gradient-1:#8b008b;--gradient-2:#9932cc;--gradient-3:#ba55d3;--gradient-4:#da70d6;
+--gradient-5:#ee82ee;--gradient-6:#dda0dd;--gradient-7:#d8bfd8;--gradient-8:#e6e6fa;
+--gradient-9:#f0f8ff;--gradient-10:#e0ffff;--gradient-11:#afeeee;--gradient-12:#7fffd4;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+html{height:-webkit-fill-available;height:100vh;font-size:16px;overflow-x:hidden;scroll-behavior:smooth;}
+body{background:var(--bg);min-height:-webkit-fill-available;min-height:100vh;margin:0;overflow-x:hidden;position:relative;overscroll-behavior:contain;scroll-behavior:smooth;}
+.page{display:none}
+/* Default state - always show login page first, hide app page until logged in */
+#app-page{display:none !important;}
+#login-page{display:block !important;}
+body.showing-login #app-page{display:none !important;}
+body.showing-login #login-page{display:block !important;}
+body.showing-app #login-page{display:none !important;}
+body.showing-app #app-page{display:block !important;}
+body:not(.showing-app) #app-page{display:none;}
+.app-container{display:flex;min-height:-webkit-fill-available;min-height:100vh;position:relative;overflow-x:hidden;width:100%;transition:all 0.3s ease;}
+/* Login */
+#login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--gradient-1),var(--gradient-2));position:relative;overflow:hidden;}
+.login-container{background:rgba(255,255,255,0.95);padding:40px;border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,0.1);max-width:400px;width:90%;text-align:center;}
+.login-form input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px;font-size:16px;}
+.login-btn{width:100%;padding:12px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:10px;}
+.login-btn:hover{background:var(--secondary);}
+
+#app-page{padding:20px;}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;}
+.card{background:white;padding:20px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:30px;}
+.stat-card{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:20px;border-radius:10px;text-align:center;}
+.student-card,.payment-card{background:#f8f9fa;padding:15px;margin:10px 0;border-radius:8px;border-left:4px solid var(--primary);}
+.form-group{margin:15px 0;}
+.form-group label{display:block;margin-bottom:5px;font-weight:500;}
+.form-group input,.form-group select{width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;}
+.btn{padding:10px 20px;background:var(--primary);color:white;border:none;border-radius:5px;cursor:pointer;}
+.btn:hover{background:var(--secondary);}
+
+@media (max-width:768px){
+.dashboard{grid-template-columns:1fr;}
+.stats{grid-template-columns:1fr;}
+.login-container{padding:30px 20px;}
+
+/* Fix mobile login page viewport and scrolling issues */
+#login-page {
+  min-height: 100vh !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  padding: 20px 10px !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure login container fits properly on mobile */
+.login-container {
   min-height: unset !important;
   max-height: 90vh !important;
   overflow-y: auto !important;
@@ -21103,6 +21505,154 @@ function initializePrivacyControls() {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initializePrivacyControls, 2000);
 });
+
+ </script>
+<script>
+// Local Authentication Manager
+// Simple email/password auth persisted in localStorage. NOT for production security use.
+class LocalAuthManager {
+  constructor(){
+    this.currentUser = null;
+    this.loadSession();
+    this.setupEventListeners();
+  }
+
+  // --- Storage Helpers ---
+  _getUsers(){
+    try { return JSON.parse(localStorage.getItem('users')||'{}'); } catch(e){ return {}; }
+  }
+  _setUsers(users){ localStorage.setItem('users', JSON.stringify(users)); }
+  _hash(str){ try { return btoa(unescape(encodeURIComponent(str))); } catch(e){ return btoa(str); } }
+
+  loadSession(){
+    const email = localStorage.getItem('currentUserEmail');
+    const role = localStorage.getItem('userRole');
+    if(email && role){
+      this.currentUser = { email, role };
+      this.showApp();
+      this.updateUserInfo(this.currentUser);
+    } else {
+      this.showLogin();
+    }
+  }
+
+  setupEventListeners(){
+    const byId = id => document.getElementById(id);
+    const safeBind = (id, handler) => { const el = byId(id); if(el) el.addEventListener('click', handler); };
+    safeBind('admin-login-btn', () => this.handleLogin('admin'));
+    safeBind('student-login-btn', () => this.handleLogin('student'));
+    safeBind('parent-login-btn', () => this.handleLogin('parent'));
+    safeBind('guest-login-btn', () => this.handleGuestLogin());
+    safeBind('show-register', (e) => { e.preventDefault(); this.showRegisterForm(); });
+    safeBind('back-to-login', () => this.showLoginForm());
+    safeBind('create-account-btn', () => this.handleRegister());
+    safeBind('logout-btn', () => this.handleLogout());
+  }
+
+  handleLogin(role){
+    const email = (document.getElementById('login-email')||{}).value || '';
+    const password = (document.getElementById('login-password')||{}).value || '';
+    if(!email || !password){ return this.showError('login-error','Please enter email and password'); }
+    const users = this._getUsers();
+    const user = users[email.toLowerCase()];
+    if(!user){ return this.showError('login-error','No account found with this email'); }
+    if(user.passwordHash !== this._hash(password)){ return this.showError('login-error','Incorrect password'); }
+    // success
+    localStorage.setItem('currentUserEmail', email);
+    localStorage.setItem('userRole', role || user.role || 'user');
+    this.currentUser = { email, role: localStorage.getItem('userRole') };
+    this.showSuccess('Login successful!');
+    this.showApp();
+    this.updateUserInfo(this.currentUser);
+  }
+
+  handleGuestLogin(){
+    localStorage.setItem('currentUserEmail', 'guest@example.com');
+    localStorage.setItem('userRole', 'guest');
+    this.currentUser = { email:'guest@example.com', role:'guest' };
+    this.showApp();
+    this.updateUserInfo(this.currentUser);
+  }
+
+  handleRegister(){
+    const name = (document.getElementById('register-name')||{}).value || '';
+    const email = (document.getElementById('register-email')||{}).value || '';
+    const phone = (document.getElementById('register-phone')||{}).value || '';
+    const role = (document.getElementById('register-role')||{}).value || '';
+    const password = (document.getElementById('register-password')||{}).value || '';
+    const confirmPassword = (document.getElementById('register-confirm-password')||{}).value || '';
+    if(!name || !email || !phone || !role || !password){ return this.showError('register-error','Please fill all fields'); }
+    if(password !== confirmPassword){ return this.showError('register-error','Passwords do not match'); }
+    if(password.length < 6){ return this.showError('register-error','Password must be at least 6 characters'); }
+    const users = this._getUsers();
+    const key = email.toLowerCase();
+    if(users[key]){ return this.showError('register-error','Email already registered'); }
+    users[key] = { name, email, phone, role, createdAt: new Date().toISOString(), passwordHash: this._hash(password) };
+    this._setUsers(users);
+    this.showSuccess('Account created successfully!');
+    setTimeout(()=> this.showLoginForm(), 1200);
+  }
+
+  handleLogout(){
+    localStorage.removeItem('currentUserEmail');
+    localStorage.removeItem('userRole');
+    this.currentUser = null;
+    this.showSuccess('Logged out successfully');
+    this.showLogin();
+  }
+
+  showLogin(){
+    document.body.className = 'showing-login';
+    const lp = document.getElementById('login-page');
+    const ap = document.getElementById('app-page');
+    if(lp) lp.style.display = 'flex';
+    if(ap) ap.style.display = 'none';
+  }
+  showApp(){
+    document.body.className = 'showing-app';
+    const lp = document.getElementById('login-page');
+    const ap = document.getElementById('app-page');
+    if(lp) lp.style.display = 'none';
+    if(ap) ap.style.display = 'block';
+    if(typeof initializeApp === 'function'){ try { initializeApp(); } catch(e) { console.warn('init app error', e); } }
+  }
+  showLoginForm(){
+    const lf = document.getElementById('login-form');
+    const rf = document.getElementById('register-form');
+    if(lf) lf.style.display='block';
+    if(rf) rf.style.display='none';
+    this.clearErrors();
+  }
+  showRegisterForm(){
+    const lf = document.getElementById('login-form');
+    const rf = document.getElementById('register-form');
+    if(lf) lf.style.display='none';
+    if(rf) rf.style.display='block';
+    this.clearErrors();
+  }
+  updateUserInfo(user){
+    const role = (user && user.role) || localStorage.getItem('userRole') || 'user';
+    const title = document.getElementById('page-title');
+    if(title) title.textContent = `Al Fizaa ${role.charAt(0).toUpperCase()+role.slice(1)} Dashboard`;
+    const profileIcon = document.getElementById('profile-icon');
+    if(profileIcon && user && user.email){ profileIcon.textContent = user.email.charAt(0).toUpperCase(); }
+  }
+  showError(id,msg){
+    const el = document.getElementById(id); if(!el) return; el.textContent = msg; el.style.display='block';
+    setTimeout(()=>{ if(el) el.style.display='none'; },5000);
+  }
+  showSuccess(msg){
+    let el = document.getElementById('success-message');
+    if(!el){ el = document.createElement('div'); el.id='success-message'; el.style.cssText='position:fixed;top:20px;right:20px;background:#28a745;color:#fff;padding:12px 20px;border-radius:8px;z-index:10000;font-weight:600;'; document.body.appendChild(el); }
+    el.textContent = msg; el.style.display='block';
+    setTimeout(()=>{ if(el) el.style.display='none'; },3000);
+  }
+  clearErrors(){ document.querySelectorAll('.error-message').forEach(e=>{ e.textContent=''; e.style.display='none'; }); }
+}
+
+// Initialize local auth once DOM ready
+document.addEventListener('DOMContentLoaded', () => { window.authManager = new LocalAuthManager(); });
+</script>
 
 </body>
 </html>
